@@ -23,6 +23,7 @@
             --obese-bg: #ffcdd2;
             --text-color: #212121;
             --shadow-color: rgba(0, 0, 0, 0.1);
+            --link-color: #7e57c2;
         }
 
         body {
@@ -153,6 +154,23 @@
             border-color: var(--input-focus-border);
             outline: none;
         }
+
+        .history-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: background 0.3s ease;
+        }
+
+        .history-link:hover {
+            background: linear-gradient(to right, var(--button-hover-gradient-start), var(--button-hover-gradient-end));
+        }
     </style>
     <script type="module">
         // Import the functions you need from the SDKs you need
@@ -180,6 +198,7 @@
 </head>
 
 <body>
+    <a href="history.html" class="history-link" data-lang-key="history-link">历史记录</a>
     <div class="card">
         <div id="lang-switch">
             <select id="lang-select" onchange="switchLanguage(this.value)">
@@ -208,6 +227,7 @@
     <script>
         const languages = {
             en: {
+                'history-link': 'History',
                 title: 'BMI Calculator',
                 'height-label': 'Your Height (cm)',
                 'weight-label': 'Your Weight (kg)',
@@ -223,6 +243,7 @@
                 'weight-placeholder': 'Enter your weight'
             },
             zh: {
+                'history-link': '历史记录',
                 title: 'BMI 计算器',
                 'height-label': '你的身高(cm)',
                 'weight-label': '你的体重(kg)',
@@ -238,6 +259,7 @@
                 'weight-placeholder': '请输入体重'
             },
             fr: {
+                'history-link': 'Historique',
                 title: 'Calculateur IMC',
                 'height-label': 'Votre Taille (cm)',
                 'weight-label': 'Votre Poids (kg)',
@@ -253,6 +275,7 @@
                 'weight-placeholder': 'Entrez votre poids'
             },
             es: {
+                'history-link': 'Historial',
                 title: 'Calculadora IMC',
                 'height-label': 'Tu Altura (cm)',
                 'weight-label': 'Tu Peso (kg)',
@@ -268,6 +291,7 @@
                 'weight-placeholder': 'Introduce tu peso'
             },
             ja: {
+                'history-link': '履歴',
                 title: 'BMI計算機',
                 'height-label': '身長 (cm)',
                 'weight-label': '体重 (kg)',
@@ -283,6 +307,7 @@
                 'weight-placeholder': '体重を入力'
             },
             de: {
+                'history-link': 'Verlauf',
                 title: 'BMI-Rechner',
                 'height-label': 'Ihre Größe (cm)',
                 'weight-label': 'Ihr Gewicht (kg)',
@@ -298,6 +323,7 @@
                 'weight-placeholder': 'Gewicht eingeben'
             },
             ar: {
+                'history-link': 'السجل',
                 title: 'حاسبة مؤشر كتلة الجسم',
                 'height-label': 'طولك (سم)',
                 'weight-label': 'وزنك (كجم)',
@@ -315,8 +341,27 @@
         };
 
         let currentLanguage;
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        const savedLanguage = getCookie('preferred_language');
         const browserLanguage = navigator.language || navigator.userLanguage;
-        if (browserLanguage.startsWith('zh')) {
+
+        if (savedLanguage) {
+            currentLanguage = savedLanguage;
+        } else if (browserLanguage.startsWith('zh')) {
             currentLanguage = 'zh';
         } else if (browserLanguage.startsWith('fr')) {
             currentLanguage = 'fr';
@@ -334,6 +379,7 @@
         document.querySelector(`#lang-select`).value = currentLanguage;
         function switchLanguage(lang) {
             currentLanguage = lang;
+            setCookie('preferred_language', lang);
             const elements = document.querySelectorAll('[data-lang-key]');
             elements.forEach(element => {
                 const key = element.getAttribute('data-lang-key');
@@ -364,18 +410,35 @@
             }
 
             const bmi = (weight / ((height / 100) * (height / 100))).toFixed(2);
+
+            // 保存到本地存储
+            const historyData = JSON.parse(localStorage.getItem('bmicul_xyz') || '[]');
+            historyData.push({
+                culTime: new Date().toLocaleString(),
+                height: height,
+                weight: weight,
+                bmi: bmi
+            });
+            localStorage.setItem('bmicul_xyz', JSON.stringify(historyData));
             let category = '';
             let message = '';
             let resultBg = '';
 
             const weightCategories = {
-                en: { underweight: 'Underweight', normal: 'Normal', overweight: 'Overweight', obese: 'Obese' },
-                zh: { underweight: '偏瘦', normal: '正常', overweight: '超重', obese: '肥胖' },
-                fr: { underweight: 'Insuffisance pondérale', normal: 'Normal', overweight: 'Surpoids', obese: 'Obésité' },
-                es: { underweight: 'Bajo peso', normal: 'Normal', overweight: 'Sobrepeso', obese: 'Obesidad' },
-                ja: { underweight: '低体重', normal: '普通', overweight: '過体重', obese: '肥満' },
-                de: { underweight: 'Untergewicht', normal: 'Normal', overweight: 'Übergewicht', obese: 'Adipositas' },
-                ar: { underweight: 'نقص الوزن', normal: 'طبيعي', overweight: 'زيادة الوزن', obese: 'سمنة' }
+                en: {
+                'history-link': 'History', underweight: 'Underweight', normal: 'Normal', overweight: 'Overweight', obese: 'Obese' },
+                zh: {
+                'history-link': '历史记录', underweight: '偏瘦', normal: '正常', overweight: '超重', obese: '肥胖' },
+                fr: {
+                'history-link': 'Historique', underweight: 'Insuffisance pondérale', normal: 'Normal', overweight: 'Surpoids', obese: 'Obésité' },
+                es: {
+                'history-link': 'Historial', underweight: 'Bajo peso', normal: 'Normal', overweight: 'Sobrepeso', obese: 'Obesidad' },
+                ja: {
+                'history-link': '履歴', underweight: '低体重', normal: '普通', overweight: '過体重', obese: '肥満' },
+                de: {
+                'history-link': 'Verlauf', underweight: 'Untergewicht', normal: 'Normal', overweight: 'Übergewicht', obese: 'Adipositas' },
+                ar: {
+                'history-link': 'السجل', underweight: 'نقص الوزن', normal: 'طبيعي', overweight: 'زيادة الوزن', obese: 'سمنة' }
             };
 
             if (bmi < 18.5) {

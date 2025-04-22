@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="history-title">BMI 历史记录</title>
+    <style>
+        :root {
+            --body-bg-start: #e8eaf6;
+            --body-bg-end: #d1c4e9;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --button-gradient-start: #7e57c2;
+            --button-gradient-end: #9575cd;
+            --button-hover-gradient-start: #673ab7;
+            --button-hover-gradient-end: #8e67c7;
+            --input-border: #bdbdbd;
+            --input-focus-border: #7e57c2;
+            --text-color: #212121;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --link-color: #7e57c2;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom, var(--body-bg-start), var(--body-bg-end));
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 16px 32px var(--shadow-color);
+            padding: 40px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: background 0.3s ease;
+        }
+
+        .home-link:hover {
+            background: linear-gradient(to right, var(--button-hover-gradient-start), var(--button-hover-gradient-end));
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--input-border);
+        }
+
+        th {
+            background: linear-gradient(to right, var(--button-gradient-start), var(--button-gradient-end));
+            color: white;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(126, 87, 194, 0.1);
+        }
+
+        #lang-switch {
+            margin-bottom: 20px;
+        }
+
+        #lang-select {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            background-color: white;
+            font-size: 16px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        #lang-select:focus {
+            border-color: var(--input-focus-border);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-link" data-lang-key="home-link">返回首页</a>
+    <div class="card">
+        <div id="lang-switch">
+            <select id="lang-select" onchange="switchLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="ja">日本語</option>
+                <option value="de">Deutsch</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
+        <h1 data-lang-key="history-title">BMI 历史记录</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th data-lang-key="time-header">时间</th>
+                    <th data-lang-key="height-header">身高 (cm)</th>
+                    <th data-lang-key="weight-header">体重 (kg)</th>
+                    <th data-lang-key="bmi-header">BMI</th>
+                </tr>
+            </thead>
+            <tbody id="history-table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const languages = {
+            en: {
+                'history-title': 'BMI History',
+                'home-link': 'Back to Home',
+                'time-header': 'Time',
+                'height-header': 'Height (cm)',
+                'weight-header': 'Weight (kg)',
+                'bmi-header': 'BMI',
+                'no-records': 'No records found'
+            },
+            zh: {
+                'history-title': 'BMI 历史记录',
+                'home-link': '返回首页',
+                'time-header': '时间',
+                'height-header': '身高 (cm)',
+                'weight-header': '体重 (kg)',
+                'bmi-header': 'BMI',
+                'no-records': '暂无记录'
+            },
+            fr: {
+                'history-title': 'Historique IMC',
+                'home-link': 'Retour',
+                'time-header': 'Temps',
+                'height-header': 'Taille (cm)',
+                'weight-header': 'Poids (kg)',
+                'bmi-header': 'IMC',
+                'no-records': 'Aucun enregistrement trouvé'
+            },
+            es: {
+                'history-title': 'Historial de IMC',
+                'home-link': 'Volver',
+                'time-header': 'Tiempo',
+                'height-header': 'Altura (cm)',
+                'weight-header': 'Peso (kg)',
+                'bmi-header': 'IMC',
+                'no-records': 'No se encontraron registros'
+            },
+            ja: {
+                'history-title': 'BMI 履歴',
+                'home-link': '戻る',
+                'time-header': '時間',
+                'height-header': '身長 (cm)',
+                'weight-header': '体重 (kg)',
+                'bmi-header': 'BMI',
+                'no-records': '記録が見つかりません'
+            },
+            de: {
+                'history-title': 'BMI-Verlauf',
+                'home-link': 'Zurück',
+                'time-header': 'Zeit',
+                'height-header': 'Größe (cm)',
+                'weight-header': 'Gewicht (kg)',
+                'bmi-header': 'BMI',
+                'no-records': 'Keine Aufzeichnungen gefunden'
+            },
+            ar: {
+                'history-title': 'سجل مؤشر كتلة الجسم',
+                'home-link': 'عودة',
+                'time-header': 'الوقت',
+                'height-header': 'الطول (سم)',
+                'weight-header': 'الوزن (كجم)',
+                'bmi-header': 'مؤشر كتلة الجسم',
+                'no-records': 'لم يتم العثور على سجلات'
+            },
+            ar: {
+                'history-title': 'سجل مؤشر كتلة الجسم',
+                'home-link': 'عودة',
+                'time-header': 'الوقت',
+                'height-header': 'الطول (سم)',
+                'weight-header': 'الوزن (كجم)',
+                'bmi-header': 'مؤشر كتلة الجسم',
+                'no-records': 'لم يتم العثور على سجلات'
+            }
+        };
+
+        let currentLanguage;
+        
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days = 365) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        const savedLanguage = getCookie('preferred_language');
+        const browserLanguage = navigator.language || navigator.userLanguage;
+        
+        if (savedLanguage) {
+            currentLanguage = savedLanguage;
+        } else if (browserLanguage.startsWith('zh')) {
+            currentLanguage = 'zh';
+        } else if (browserLanguage.startsWith('fr')) {
+            currentLanguage = 'fr';
+        } else if (browserLanguage.startsWith('es')) {
+            currentLanguage = 'es';
+        } else if (browserLanguage.startsWith('ja')) {
+            currentLanguage = 'ja';
+        } else if (browserLanguage.startsWith('de')) {
+            currentLanguage = 'de';
+        } else if (browserLanguage.startsWith('ar')) {
+            currentLanguage = 'ar';
+        } else {
+            currentLanguage = 'en';
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            setCookie('preferred_language', lang);
+            const elements = document.querySelectorAll('[data-lang-key]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                element.textContent = languages[lang][key];
+            });
+            loadHistoryData();
+        }
+
+        function loadHistoryData() {
+            const historyData = JSON.parse(localStorage.getItem('bmicul_xyz') || '[]');
+            const tableBody = document.getElementById('history-table-body');
+            tableBody.innerHTML = '';
+
+            if (historyData.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 4;
+                cell.textContent = languages[currentLanguage]['no-records'];
+                cell.style.textAlign = 'center';
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+                return;
+            }
+
+            historyData.reverse().forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.culTime}</td>
+                    <td>${record.height}</td>
+                    <td>${record.weight}</td>
+                    <td>${record.bmi}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.querySelector('#lang-select').value = currentLanguage;
+        switchLanguage(currentLanguage);
+    </script>
+</body>
+</html>
