@@ -134,13 +134,24 @@
         }
 
         #lang-switch {
-            display: flex;
-            justify-content: center;
             margin-bottom: 20px;
         }
 
-        #lang-switch label {
-            margin: 0 10px;
+        #lang-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            background-color: white;
+            font-size: 16px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        #lang-select:focus {
+            border-color: var(--input-focus-border);
+            outline: none;
         }
     </style>
     <script type="module">
@@ -171,12 +182,15 @@
 <body>
     <div class="card">
         <div id="lang-switch">
-            <label>
-                <input type="radio" name="language" value="en" onchange="switchLanguage('en')"> English
-            </label>
-            <label>
-                <input type="radio" name="language" value="zh" onchange="switchLanguage('zh')"> 中文
-            </label>
+            <select id="lang-select" onchange="switchLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="ja">日本語</option>
+                <option value="de">Deutsch</option>
+                <option value="ar">العربية</option>
+            </select>
         </div>
         <h1 data-lang-key="title">BMI 计算器</h1>
         <div class="input-group">
@@ -200,7 +214,7 @@
                 'calculate-button': 'Calculate BMI',
                 'underweight-message': 'You might float away like a kite when the wind blows!',
                 'normal-message': 'Hey, your figure is just "perfect" as if God blessed you!',
-                'overweight-message': 'If you gain a little more weight, you can be a stand - in for a panda!',
+                'overweight-message': 'If you gain a little more weight, you can be a stand-in for a panda!',
                 'obese-message': 'You are not fat; you are just adorably inflated!',
                 'invalid-input': 'Please enter valid height and weight values.',
                 'result-prefix': 'Your BMI is: ',
@@ -214,7 +228,7 @@
                 'weight-label': '你的体重(kg)',
                 'calculate-button': '计算 BMI',
                 'underweight-message': '风一吹，你怕是要像风筝一样飘走咯！',
-                'normal-message': '嘿，你这身材，老天爷赏饭吃的 “刚刚好” 呀！',
+                'normal-message': '嘿，你这身材，老天爷赏饭吃的 "刚刚好" 呀！',
                 'overweight-message': '再胖点，你能去给熊猫当替身咯！',
                 'obese-message': '你不是胖，你是可爱到膨胀啦',
                 'invalid-input': '请输入有效的身高和体重值。',
@@ -222,19 +236,102 @@
                 'category-prefix': '，体重分类：',
                 'height-placeholder': '请输入身高',
                 'weight-placeholder': '请输入体重'
+            },
+            fr: {
+                title: 'Calculateur IMC',
+                'height-label': 'Votre Taille (cm)',
+                'weight-label': 'Votre Poids (kg)',
+                'calculate-button': 'Calculer IMC',
+                'underweight-message': 'Vous pourriez vous envoler comme un cerf-volant !',
+                'normal-message': 'Hé, votre silhouette est parfaite, comme bénie des dieux !',
+                'overweight-message': 'Encore un peu et vous pourriez être la doublure d\'un panda !',
+                'obese-message': 'Vous n\'êtes pas gros, vous êtes adorablement gonflé !',
+                'invalid-input': 'Veuillez entrer des valeurs valides pour la taille et le poids.',
+                'result-prefix': 'Votre IMC est : ',
+                'category-prefix': ', Catégorie de poids : ',
+                'height-placeholder': 'Entrez votre taille',
+                'weight-placeholder': 'Entrez votre poids'
+            },
+            es: {
+                title: 'Calculadora IMC',
+                'height-label': 'Tu Altura (cm)',
+                'weight-label': 'Tu Peso (kg)',
+                'calculate-button': 'Calcular IMC',
+                'underweight-message': '¡Podrías volar como una cometa con el viento!',
+                'normal-message': '¡Hey, tu figura es perfecta, como bendecida por Dios!',
+                'overweight-message': '¡Un poco más y podrías ser el doble de un panda!',
+                'obese-message': '¡No estás gordo, estás adorablemente inflado!',
+                'invalid-input': 'Por favor, introduce valores válidos de altura y peso.',
+                'result-prefix': 'Tu IMC es: ',
+                'category-prefix': ', Categoría de peso: ',
+                'height-placeholder': 'Introduce tu altura',
+                'weight-placeholder': 'Introduce tu peso'
+            },
+            ja: {
+                title: 'BMI計算機',
+                'height-label': '身長 (cm)',
+                'weight-label': '体重 (kg)',
+                'calculate-button': 'BMIを計算',
+                'underweight-message': '風が吹いたら凧のように飛んでいきそう！',
+                'normal-message': 'あなたの体型は神様からの完璧な贈り物ですね！',
+                'overweight-message': 'もう少しでパンダの代役ができそう！',
+                'obese-message': '太っているんじゃない、愛らしく膨らんでいるだけ！',
+                'invalid-input': '有効な身長と体重の値を入力してください。',
+                'result-prefix': 'あなたのBMIは：',
+                'category-prefix': '、体重カテゴリー：',
+                'height-placeholder': '身長を入力',
+                'weight-placeholder': '体重を入力'
+            },
+            de: {
+                title: 'BMI-Rechner',
+                'height-label': 'Ihre Größe (cm)',
+                'weight-label': 'Ihr Gewicht (kg)',
+                'calculate-button': 'BMI berechnen',
+                'underweight-message': 'Sie könnten wie ein Drachen davonfliegen!',
+                'normal-message': 'Hey, Ihre Figur ist einfach perfekt, als hätte Gott Sie gesegnet!',
+                'overweight-message': 'Noch ein bisschen mehr und Sie könnten ein Panda-Double sein!',
+                'obese-message': 'Sie sind nicht dick, Sie sind nur liebenswert aufgebläht!',
+                'invalid-input': 'Bitte geben Sie gültige Werte für Größe und Gewicht ein.',
+                'result-prefix': 'Ihr BMI ist: ',
+                'category-prefix': ', Gewichtskategorie: ',
+                'height-placeholder': 'Größe eingeben',
+                'weight-placeholder': 'Gewicht eingeben'
+            },
+            ar: {
+                title: 'حاسبة مؤشر كتلة الجسم',
+                'height-label': 'طولك (سم)',
+                'weight-label': 'وزنك (كجم)',
+                'calculate-button': 'احسب مؤشر كتلة الجسم',
+                'underweight-message': 'قد تطير مثل الطائرة الورقية عندما تهب الرياح!',
+                'normal-message': 'هاي، قوامك مثالي كأنه هبة من الله!',
+                'overweight-message': 'قليلاً آخر وستكون بديلاً للباندا!',
+                'obese-message': 'أنت لست سميناً، أنت فقط منتفخ بشكل لطيف!',
+                'invalid-input': 'الرجاء إدخال قيم صحيحة للطول والوزن.',
+                'result-prefix': 'مؤشر كتلة الجسم لديك: ',
+                'category-prefix': '، فئة الوزن: ',
+                'height-placeholder': 'أدخل طولك',
+                'weight-placeholder': 'أدخل وزنك'
             }
         };
 
         let currentLanguage;
         const browserLanguage = navigator.language || navigator.userLanguage;
-        if (browserLanguage.includes('zh')) {
+        if (browserLanguage.startsWith('zh')) {
             currentLanguage = 'zh';
-            document.querySelector('input[value="zh"]').checked = true;
+        } else if (browserLanguage.startsWith('fr')) {
+            currentLanguage = 'fr';
+        } else if (browserLanguage.startsWith('es')) {
+            currentLanguage = 'es';
+        } else if (browserLanguage.startsWith('ja')) {
+            currentLanguage = 'ja';
+        } else if (browserLanguage.startsWith('de')) {
+            currentLanguage = 'de';
+        } else if (browserLanguage.startsWith('ar')) {
+            currentLanguage = 'ar';
         } else {
             currentLanguage = 'en';
-            document.querySelector('input[value="en"]').checked = true;
         }
-
+        document.querySelector(`#lang-select`).value = currentLanguage;
         function switchLanguage(lang) {
             currentLanguage = lang;
             const elements = document.querySelectorAll('[data-lang-key]');
@@ -248,6 +345,13 @@
                     element.textContent = languages[lang][key];
                 }
             });
+            // 清空结果显示区域
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            resultDiv.innerHTML = '';
+            // 移除所有弹幕元素
+            const danmakus = document.querySelectorAll('.danmaku');
+            danmakus.forEach(danmaku => danmaku.remove());
         }
 
         function calculateBMI() {
@@ -264,20 +368,30 @@
             let message = '';
             let resultBg = '';
 
+            const weightCategories = {
+                en: { underweight: 'Underweight', normal: 'Normal', overweight: 'Overweight', obese: 'Obese' },
+                zh: { underweight: '偏瘦', normal: '正常', overweight: '超重', obese: '肥胖' },
+                fr: { underweight: 'Insuffisance pondérale', normal: 'Normal', overweight: 'Surpoids', obese: 'Obésité' },
+                es: { underweight: 'Bajo peso', normal: 'Normal', overweight: 'Sobrepeso', obese: 'Obesidad' },
+                ja: { underweight: '低体重', normal: '普通', overweight: '過体重', obese: '肥満' },
+                de: { underweight: 'Untergewicht', normal: 'Normal', overweight: 'Übergewicht', obese: 'Adipositas' },
+                ar: { underweight: 'نقص الوزن', normal: 'طبيعي', overweight: 'زيادة الوزن', obese: 'سمنة' }
+            };
+
             if (bmi < 18.5) {
-                category = currentLanguage === 'en'? 'Underweight' : '偏瘦';
+                category = weightCategories[currentLanguage].underweight;
                 message = languages[currentLanguage]['underweight-message'];
                 resultBg = getComputedStyle(document.documentElement).getPropertyValue('--underweight-bg');
             } else if (bmi >= 18.5 && bmi < 24) {
-                category = currentLanguage === 'en'? 'Normal' : '正常';
+                category = weightCategories[currentLanguage].normal;
                 message = languages[currentLanguage]['normal-message'];
                 resultBg = getComputedStyle(document.documentElement).getPropertyValue('--normal-bg');
             } else if (bmi >= 24 && bmi < 28) {
-                category = currentLanguage === 'en'? 'Overweight' : '超重';
+                category = weightCategories[currentLanguage].overweight;
                 message = languages[currentLanguage]['overweight-message'];
                 resultBg = getComputedStyle(document.documentElement).getPropertyValue('--overweight-bg');
             } else {
-                category = currentLanguage === 'en'? 'Obese' : '肥胖';
+                category = weightCategories[currentLanguage].obese;
                 message = languages[currentLanguage]['obese-message'];
                 resultBg = getComputedStyle(document.documentElement).getPropertyValue('--obese-bg');
             }
